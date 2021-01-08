@@ -1,0 +1,6 @@
+i.MX8MP ICORE BOARD
+M:	Engicam <support@engicam.com>
+S:	Maintained
+F:	board/engicam/imx8mp_icore/
+F:	include/configs/imx8mp_icore.h
+F:	configs/imx8mp_icore_defconfig

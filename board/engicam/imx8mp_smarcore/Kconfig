@@ -1,0 +1,15 @@
+
+if TARGET_IMX8MP_SMARCORE
+
+config SYS_BOARD
+	default "imx8mp_smarcore"
+
+config SYS_VENDOR
+	default "engicam"
+
+config SYS_CONFIG_NAME
+	default "imx8mp_smarcore"
+
+source "board/engicam/common/Kconfig"
+
+endif
