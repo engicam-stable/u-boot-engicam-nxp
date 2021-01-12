@@ -124,6 +124,18 @@ config TARGET_IMX8MP_DDR4_EVK
 	select SUPPORT_SPL
 	select IMX8M_DDR4
 
+config TARGET_ICORE_MX8MM
+        bool "imx8mm iCore Engicam module"
+        select IMX8MM
+        select SUPPORT_SPL
+        select IMX8M_LPDDR4
+
+config TARGET_ICORE_MX8MM_2GB
+        bool "imx8mm iCore Engicam module with 2GB"
+        select IMX8MM
+        select SUPPORT_SPL
+        select IMX8M_LPDDR42GB
+
 config TARGET_IMX8MP_ICORE
 	bool "imx8mp LPDDR4 ICORE board"
 	select IMX8MP
@@ -175,6 +187,7 @@ source "board/freescale/imx8mm_evk/Kconfig"
 source "board/freescale/imx8mm_val/Kconfig"
 source "board/freescale/imx8mn_evk/Kconfig"
 source "board/freescale/imx8mp_evk/Kconfig"
+source "board/engicam/imx8mm_icore/Kconfig"
 source "board/engicam/imx8mp_icore/Kconfig"
 source "board/engicam/imx8mp_smarcore/Kconfig"
 source "board/toradex/verdin-imx8mm/Kconfig"

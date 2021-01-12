@@ -67,7 +67,7 @@
 #define PHY_ANEG_TIMEOUT 20000
 
 #define CONFIG_FEC_XCV_TYPE             RGMII
-#define CONFIG_FEC_MXC_PHYADDR          0
+#define CONFIG_FEC_MXC_PHYADDR          3
 #define FEC_QUIRK_ENET_MAC
 
 #define IMX_FEC_BASE			0x30BE0000
@@ -211,10 +211,17 @@
 
 #define CONFIG_SYS_SDRAM_BASE           0x40000000
 #define PHYS_SDRAM                      0x40000000
-#define PHYS_SDRAM_SIZE			0x80000000 /* 2GB DDR */
+/*#define DRAM_2GB_SAMSUNG*/
+#ifdef CONFIG_TARGET_ICORE_MX8MM_2GB
+  #define PHYS_SDRAM_SIZE			0x80000000 /* 2GB DDR total */
+#else
+/* Configuration for 1GB default DDR4 size */
+  #define PHYS_SDRAM_SIZE			0x40000000 /* 1GB DDR */
+#endif
 
 #define CONFIG_SYS_MEMTEST_START	PHYS_SDRAM
-#define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + (PHYS_SDRAM_SIZE >> 1))
+#define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + \
+					(PHYS_SDRAM_SIZE >> 1))
 
 #define CONFIG_MXC_UART_BASE		UART2_BASE_ADDR
 
