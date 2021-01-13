@@ -125,29 +125,23 @@ config TARGET_IMX8MP_DDR4_EVK
 	select IMX8M_DDR4
 
 config TARGET_ICORE_MX8MM
-        bool "imx8mm iCore Engicam module"
-        select IMX8MM
-        select SUPPORT_SPL
-        select IMX8M_LPDDR4
-
-config TARGET_ICORE_MX8MM_2GB
-        bool "imx8mm iCore Engicam module with 2GB"
-        select IMX8MM
-        select SUPPORT_SPL
-        select IMX8M_LPDDR42GB
+    bool "imx8mm iCore Engicam module"
+    select IMX8MM
+    select SUPPORT_SPL
+    select IMX8M_LPDDR4
 
 config TARGET_IMX8MP_ICORE
 	bool "imx8mp LPDDR4 ICORE board"
 	select IMX8MP
 	select SUPPORT_SPL
-	select IMX8M_LPDDR4	
+	select IMX8M_LPDDR4
 
 config TARGET_IMX8MP_SMARCORE
 	bool "imx8mp LPDDR4 SmarCore board"
 	select IMX8MP
 	select SUPPORT_SPL
-	select IMX8M_LPDDR4	
-		
+	select IMX8M_LPDDR4
+
 config TARGET_IMX8MM_AB2
 	bool "imx8mm LPDDR4 Audio board 2.0"
 	select IMX8MM

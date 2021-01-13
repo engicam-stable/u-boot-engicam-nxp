@@ -241,11 +241,12 @@ int power_init_board(void)
 	/* increase VDD_DRAM to 0.975v for 3Ghz DDR */
 	pmic_reg_write(p, BD71837_BUCK5_VOLT, 0x83);
 
-#ifndef CONFIG_IMX8M_LPDDR4
-	/* increase NVCC_DRAM_1V2 to 1.2v for DDR4 */
-	pmic_reg_write(p, BD71837_BUCK8_VOLT, 0x28);
+#ifndef CONFIG_IMX8M_LPDDR42GB
+	#ifndef CONFIG_IMX8M_LPDDR4
+		/* increase NVCC_DRAM_1V2 to 1.2v for DDR4 */
+		pmic_reg_write(p, BD71837_BUCK8_VOLT, 0x28);
+	#endif
 #endif
-
 	/* lock the PMIC regs */
 	pmic_reg_write(p, BD71837_REGLOCK, 0x11);
 
