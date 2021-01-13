@@ -3,8 +3,8 @@
  * Copyright 2019 NXP
  */
 
-#ifndef __IMX8MM_EVK_H
-#define __IMX8MM_EVK_H
+#ifndef __IMX8MM_ICORE_H
+#define __IMX8MM_ICORE_H
 
 #include <linux/sizes.h>
 #include <asm/arch/imx-regs.h>
@@ -210,8 +210,8 @@
 #define CONFIG_SYS_MALLOC_LEN		SZ_32M
 
 #define CONFIG_SYS_SDRAM_BASE           0x40000000
-#define PHYS_SDRAM                      0x40000000
-/*#define DRAM_2GB_SAMSUNG*/
+#define PHYS_SDRAM						0x40000000
+
 #ifdef CONFIG_TARGET_ICORE_MX8MM_2GB
   #define PHYS_SDRAM_SIZE			0x80000000 /* 2GB DDR total */
 #else
