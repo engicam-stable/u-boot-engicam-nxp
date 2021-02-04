@@ -412,7 +412,7 @@ int board_late_init(void)
 	if (m4_boot)
 		env_set("fdt_file", "imx8qxp-icore-rpmsg.dtb");
 	else
-		env_set("fdt_file", "imx8x-smarcore.dtb");
+		env_set("fdt_file", "imx8x-smarcore-multimedia-4k.dtb");
 	}
 
 #ifdef CONFIG_ENV_IS_IN_MMC

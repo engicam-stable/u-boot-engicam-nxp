@@ -66,6 +66,9 @@
 
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 
+#undef CONFIG_DEFAULT_FDT_FILE
+#define CONFIG_DEFAULT_FDT_FILE  "imx8x-smarcore-multimedia-4k.dtb"
+
 #ifdef CONFIG_AHAB_BOOT
 #define AHAB_ENV "sec_boot=yes\0"
 #else
