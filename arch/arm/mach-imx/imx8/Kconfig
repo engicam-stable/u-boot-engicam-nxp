@@ -174,15 +174,26 @@ config TARGET_IMX8DXL_DDR3_EVK
 	select BOARD_LATE_INIT
 	select IMX8DXL
 
-config TARGET_IMX8X_ICORE
-	bool "Support i.core mx8x"
+config TARGET_IMX8XD_ICORE
+	bool "Support i.core mx8x dual"
 	select BOARD_LATE_INIT
 	select IMX8QXP
 
-config TARGET_IMX8X_SMARCORE
-	bool "Support smarcore mx8x"
+config TARGET_IMX8XQ_ICORE
+	bool "Support i.core mx8x quad"
 	select BOARD_LATE_INIT
 	select IMX8QXP
+
+config TARGET_IMX8XD_SMARCORE
+	bool "Support smarcore mx8x dual"
+	select BOARD_LATE_INIT
+	select IMX8QXP
+
+config TARGET_IMX8XQ_SMARCORE
+	bool "Support smarcore mx8x quad"
+	select BOARD_LATE_INIT
+	select IMX8QXP
+	
 	
 endchoice
 

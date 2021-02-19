@@ -222,10 +222,10 @@ int board_phy_config(struct phy_device *phydev)
 
 int checkboard(void)
 {
-#ifdef CONFIG_TARGET_IMX8X_SMARCORE
-	puts("Board: Smarcore iMX8X based\n");
+#ifdef CONFIG_TARGET_IMX8XD_SMARCORE
+	puts("Board: Smarcore iMX8DXP based\n");
 #else
-	puts("Board: i.Core MX8XD based\n");
+	puts("Board: Smarcore iMX8XQXP based\n");
 #endif
 
 	print_bootinfo();
@@ -393,10 +393,10 @@ int board_late_init(void)
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	env_set("board_name", "i.CORE");
-#ifdef CONFIG_TARGET_IMX8X_SMARCORE
-	env_set("board_rev", "iMX8X");
-#else
+#ifdef CONFIG_TARGET_IMX8XD_SMARCORE
 	env_set("board_rev", "iMX8XD");
+#else
+	env_set("board_rev", "iMX8XQ");
 #endif
 #endif
 
