@@ -72,6 +72,12 @@
 #define AHAB_ENV "sec_boot=no\0"
 #endif
 
+#ifdef CONFIG_TARGET_IMX8XD_ICORE
+#define CONFIG_DEFAULT_FDT_FILE		"imx8xd-icore-starterkit.dtb"
+#else
+#define CONFIG_DEFAULT_FDT_FILE		"imx8xq-icore-starterkit.dtb"
+#endif
+
 /* Boot M4 */
 #define M4_BOOT_ENV \
 	"m4_0_image=m4_0.bin\0" \
