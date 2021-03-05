@@ -39,9 +39,9 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		always-on;
-	};	
-	
-#define TBD_PMIC 
+	};
+
+#define TBD_PMIC
 #ifdef TBD_PMIC
 	buck1_reg: regulator@0 {
 //		reg = <0>;
@@ -324,15 +324,15 @@
 	phy-handle = <&ethphy0>;
 	fsl,magic-packet;
 	status = "okay";
-  phy-reset-gpios = <&gpio3 7 GPIO_ACTIVE_LOW>;
-  
+  	//phy-reset-gpios = <&gpio3 7 GPIO_ACTIVE_LOW>;
+
 	mdio {
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		ethphy0: ethernet-phy@0 {
+		ethphy0: ethernet-phy@3 {
 			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <0>;
+			reg = <3>;
 			at803x,led-act-blind-workaround;
 			at803x,eee-okay;
 			at803x,vddio-1p8v;

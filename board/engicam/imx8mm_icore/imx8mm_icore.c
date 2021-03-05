@@ -65,6 +65,14 @@ static void setup_gpmi_nand(void)
 }
 #endif
 
+#define FEC_RST_PAD IMX_GPIO_NR(3, 7)
+#define MDIOAADR2 IMX_GPIO_NR(1, 25)
+static iomux_v3_cfg_t const fec1_rst_pads[] = {
+        IMX8MM_PAD_NAND_DATA01_GPIO3_IO7 | MUX_PAD_CTRL(NO_PAD_CTRL),
+		IMX8MM_PAD_ENET_RXC_GPIO1_IO25 | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+
+
 int board_early_init_f(void)
 {
 	struct wdog_regs *wdog = (struct wdog_regs *)WDOG1_BASE_ADDR;
@@ -77,6 +85,22 @@ int board_early_init_f(void)
 
 	init_uart_clk(1);
 
+
+	imx_iomux_v3_setup_multiple_pads(fec1_rst_pads,
+				 ARRAY_SIZE(fec1_rst_pads));
+
+	gpio_request(FEC_RST_PAD, "fec1_rst");
+	gpio_request(MDIOAADR2, "mdioaddr2");
+
+	udelay(1000);
+	gpio_direction_output(MDIOAADR2, 0);
+	udelay(5000);
+	gpio_direction_output(FEC_RST_PAD, 0);
+	udelay(5000);
+	gpio_direction_output(FEC_RST_PAD, 1);
+	udelay(5000);
+
+
 #ifdef CONFIG_NAND_MXS
 	setup_gpmi_nand(); /* SPL will call the board_early_init_f */
 #endif
@@ -85,28 +109,17 @@ int board_early_init_f(void)
 }
 
 #if IS_ENABLED(CONFIG_FEC_MXC)
-#define FEC_RST_PAD IMX_GPIO_NR(3, 7)
-static iomux_v3_cfg_t const fec1_rst_pads[] = {
-        IMX8MM_PAD_NAND_DATA01_GPIO3_IO7 | MUX_PAD_CTRL(NO_PAD_CTRL),
-};
+
 
 static int setup_fec(void)
 {
 	struct iomuxc_gpr_base_regs *gpr =
-		(struct iomuxc_gpr_base_regs *)IOMUXC_GPR_BASE_ADDR;
-
-	imx_iomux_v3_setup_multiple_pads(fec1_rst_pads,
-				 ARRAY_SIZE(fec1_rst_pads));
-
-	gpio_request(FEC_RST_PAD, "fec1_rst");
-	gpio_direction_output(FEC_RST_PAD, 0);
-	udelay(500);
-	gpio_direction_output(FEC_RST_PAD, 1);
-
+			(struct iomuxc_gpr_base_regs *)IOMUXC_GPR_BASE_ADDR;
 	/* Use 125M anatop REF_CLK1 for ENET1, not from external */
 	clrsetbits_le32(&gpr->gpr[1],
 			IOMUXC_GPR_GPR1_GPR_ENET1_TX_CLK_SEL_MASK, 0);
 	return set_clk_enet(ENET_125MHZ);
+
 }
 
 int board_phy_config(struct phy_device *phydev)
