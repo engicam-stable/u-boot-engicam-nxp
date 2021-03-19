@@ -625,6 +625,14 @@ config TARGET_MX6ULL_14X14_EVK
 	select MX6ULL
 	imply CMD_DM
 
+config TARGET_MICROGEA_MX6ULL
+	bool "Support Engicam Microgea"
+	select BOARD_LATE_INIT
+	select DM
+	select DM_THERMAL
+	select MX6ULL
+	imply CMD_DM	
+
 config TARGET_NITROGEN6X
 	bool "nitrogen6x"
 	imply USB_ETHER_ASIX
@@ -900,5 +908,6 @@ source "board/udoo/neo/Kconfig"
 source "board/wandboard/Kconfig"
 source "board/warp/Kconfig"
 source "board/BuR/brppt2/Kconfig"
+source "board/engicam/microgea-mx6ull/Kconfig"
 
 endif
