@@ -1,0 +1,7 @@
+ISIOT BOARD
+M:      Mirko Ardinghi <support@engicam.com>
+S:      Maintained
+F:      board/engicam/isiot/
+F:      include/configs/isiot.h
+F:      configs/imx6ull_isiot_defconfig
+F:      configs/mx6ull_isiot_sd_defconfig

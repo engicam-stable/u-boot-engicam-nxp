@@ -1,0 +1,21 @@
+if TARGET_IMX6ULL_ISIOT
+
+config BOOT_FROM_EMMC
+	bool "Enable boot from emmc"
+	default y
+	help
+		This option enable boot from emmc and disabled sdcard
+
+config SYS_BOARD
+        default "imx6ull_isiot"
+
+config SYS_VENDOR
+        default "engicam"
+
+config SYS_CONFIG_NAME
+        default "imx6ull-isiot"
+
+config SYS_TEXT_BASE
+        default 0x87800000
+        
+endif
