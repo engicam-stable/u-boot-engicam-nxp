@@ -50,6 +50,9 @@ choice
 	prompt  "NXP i.MX8M board select"
 	optional
 
+config IMX8MP_ICORE_4GB
+	bool "icoremx8mp 4gb"
+
 config TARGET_IMX8MQ_EVK
 	bool "imx8mq_evk"
 	select IMX8MQ
@@ -131,6 +134,12 @@ config TARGET_ICORE_MX8MM
     select IMX8M_LPDDR4
 
 config TARGET_IMX8MP_ICORE
+	bool "imx8mp LPDDR4 ICORE board"
+	select IMX8MP
+	select SUPPORT_SPL
+	select IMX8M_LPDDR4
+
+config TARGET_IMX8MP_ICORE_4GB
 	bool "imx8mp LPDDR4 ICORE board"
 	select IMX8MP
 	select SUPPORT_SPL

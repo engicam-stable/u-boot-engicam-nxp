@@ -8,5 +8,9 @@ obj-y += imx8mp_icore.o
 
 ifdef CONFIG_SPL_BUILD
 obj-y += spl.o
-obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_timing.o
+ifdef CONFIG_TARGET_IMX8MP_ICORE_4GB
+	obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_timing_4gb.o
+else
+	obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_timing.o
+endif
 endif
