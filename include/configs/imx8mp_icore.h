@@ -190,7 +190,7 @@
 #ifdef CONFIG_TARGET_IMX8MP_ICORE_4GB
     #undef PHYS_SDRAM_SIZE
     #define PHYS_SDRAM_SIZE		0xC0000000	/* 3 GB */
-    #define PHYS_SDRAM_2		0xC0000000
+    #define PHYS_SDRAM_2		0x100000000
     #define PHYS_SDRAM_2_SIZE	0x40000000	/* 1 GB */
 #endif
 
