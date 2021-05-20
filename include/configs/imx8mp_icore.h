@@ -182,14 +182,16 @@
 /* Size of malloc() pool */
 #define CONFIG_SYS_MALLOC_LEN		SZ_32M
 
-/* Totally 4GB DDR */
+/* Totally 2GB DDR */
 #define CONFIG_SYS_SDRAM_BASE		0x40000000
 #define PHYS_SDRAM			0x40000000
 #define PHYS_SDRAM_SIZE		0x80000000	/* 2 GB */
 
 #ifdef CONFIG_TARGET_IMX8MP_ICORE_4GB
-    #define PHYS_SDRAM_2		0x100000000
-    #define PHYS_SDRAM_2_SIZE	0x80000000	/* 2 GB */
+    #undef PHYS_SDRAM_SIZE
+    #define PHYS_SDRAM_SIZE		0xC0000000	/* 3 GB */
+    #define PHYS_SDRAM_2		0xC0000000
+    #define PHYS_SDRAM_2_SIZE	0x40000000	/* 1 GB */
 #endif
 
 #define CONFIG_SYS_MEMTEST_START	0x60000000
