@@ -641,6 +641,14 @@ config TARGET_IMX6ULL_ISIOT
 	select MX6ULL
 	imply CMD_DM
 
+config TARGET_GEA_MX6ULL
+	bool "Support Engicam Gea"
+	select BOARD_LATE_INIT
+	select DM
+	select DM_THERMAL
+	select MX6ULL
+	imply CMD_DM
+
 config TARGET_NITROGEN6X
 	bool "nitrogen6x"
 	imply USB_ETHER_ASIX
@@ -918,5 +926,6 @@ source "board/warp/Kconfig"
 source "board/BuR/brppt2/Kconfig"
 source "board/engicam/microgea-mx6ull/Kconfig"
 source "board/engicam/imx6ull_isiot/Kconfig"
+source "board/engicam/gea-mx6ull/Kconfig"
 
 endif
