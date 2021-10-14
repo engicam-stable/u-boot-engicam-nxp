@@ -176,9 +176,9 @@ config TARGET_IMX8MM_ICORE
 	bool "imx8mm iCore Engicam module"
 	select IMX8MM
 	select SUPPORT_SPL
-	select IMX8M_LPDDR4		
+	select IMX8M_LPDDR4
 
-	
+
 config TARGET_IMX8MP_ICORE
 	bool "imx8mm iCore Engicam module"
 	select IMX8MP
@@ -187,8 +187,8 @@ config TARGET_IMX8MP_ICORE
 	select FSL_CAAM
 	select FSL_BLOB
 	select MISC
-	select SPL_CRYPTO_SUPPORT if SPL	
-	
+	select SPL_CRYPTO_SUPPORT if SPL
+
 config TARGET_VERDIN_IMX8MM
        bool "Support Toradex Verdin iMX8M Mini module"
        select IMX8MM
@@ -237,4 +237,3 @@ source "board/phytec/phycore_imx8mp/Kconfig"
 source "board/engicam/imx8mm_icore/Kconfig"
 source "board/engicam/imx8mp_icore/Kconfig"
 endif
-

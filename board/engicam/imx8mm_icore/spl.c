@@ -130,7 +130,7 @@ int board_mmc_init(struct bd_info *bis)
 	 * (U-Boot device node)    (Physical Port)
 	 * mmc0                    USDHC1
 	 * mmc1                    USDHC3
-	 */	
+	 */
 	for (i = 0; i < CONFIG_SYS_FSL_USDHC_NUM; i++) {
 		switch (i) {
 			case 0:
@@ -192,7 +192,7 @@ int board_mmc_getcd(struct mmc *mmc)
 
 int power_init_board(void)
 {
-	struct pmic *p;	
+	struct pmic *p;
 
 	int ret = power_pca9450_init(I2C_PMIC);
 	if (ret)
@@ -249,10 +249,12 @@ int power_init_board(void)
 	/* increase VDD_DRAM to 0.975v for 3Ghz DDR */
 	pmic_reg_write(p, BD718XX_1ST_NODVS_BUCK_VOLT, 0x83);
 
-#ifndef CONFIG_IMX8M_LPDDR4
-	/* increase NVCC_DRAM_1V2 to 1.2v for DDR4 */
-	pmic_reg_write(p, BD718XX_4TH_NODVS_BUCK_VOLT, 0x28);
-#endif
+	#ifndef CONFIG_IMX8M_LPDDR42GB
+		#ifndef CONFIG_IMX8M_LPDDR4
+			/* increase NVCC_DRAM_1V2 to 1.2v for DDR4 */
+			pmic_reg_write(p, BD71837_BUCK8_VOLT, 0x28);
+		#endif
+	#endif
 
 	/* lock the PMIC regs */
 	pmic_reg_write(p, BD718XX_REGLOCK, 0x11);

@@ -147,7 +147,7 @@
 			   "fi; " \
 		   "fi; " \
 	   "fi;"
-	   
+
 /* Link Definitions */
 #define CONFIG_LOADADDR			0x40480000
 
@@ -165,7 +165,13 @@
 
 #define CONFIG_SYS_SDRAM_BASE		0x40000000
 #define PHYS_SDRAM			0x40000000
-#define PHYS_SDRAM_SIZE		0x40000000 /* 2GB DDR */
+
+#ifdef CONFIG_IMX8M_2G_LPDDR4
+  #define PHYS_SDRAM_SIZE			0x80000000 /* 2GB DDR */
+#else
+/* Configuration for 1GB default DDR4 size */
+  #define PHYS_SDRAM_SIZE			0x40000000 /* 1GB DDR */
+#endif
 
 #define CONFIG_MXC_UART_BASE		UART2_BASE_ADDR
 
