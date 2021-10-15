@@ -877,7 +877,8 @@ dtb-$(CONFIG_ARCH_IMX8M) += \
 	imx8mp-phyboard-pollux-rdk.dtb \
 	imx8mq-pico-pi.dtb \
 	imx8mm-icore.dtb \
-	imx8mp-icore.dtb 
+	imx8mp-icore.dtb \
+	imx8mp-smarcore.dtb 
 
 dtb-$(CONFIG_ARCH_IMXRT) += imxrt1050-evk.dtb \
 	imxrt1020-evk.dtb
