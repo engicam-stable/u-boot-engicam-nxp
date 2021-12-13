@@ -54,14 +54,20 @@
 
 #define BOOTCMD_FROM_NET	 "run bootargs_net; tftp uImage; tftp ${fdt_addr} uImage.dtb; bootz ${loadaddr} - ${fdt_addr} \0"
 
-#ifdef CONFIG_NAND_BOOT
-	#define BOOTCMD		"bootcmd=run bootcmd_ubi\0"
+#ifdef CONFIG_EMMC_BOOT
+	#define BOOTCMD		"bootcmd=run bootcmd_emmc\0"
 #else
-	#define BOOTCMD		"bootcmd=run bootcmd_mmc\0"
+	#ifdef CONFIG_NAND_BOOT
+		#define BOOTCMD		"bootcmd=run bootcmd_ubi\0"
+	#else
+		#define BOOTCMD		"bootcmd=run bootcmd_mmc\0"
+	#endif
 #endif
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 		"bootargs_base=setenv bootargs_tmp console=ttymxc0,115200\0"			\
+		"bootargs_emmc=run bootargs_base; setenv bootargs ${bootargs_tmp} root=/dev/mmcblk${mmcdev}p2 rootwait rw\0" \
+		"bootcmd_emmc=setenv mmcdev 1; run bootargs_emmc; run loadfdt; run loadzImage; bootz ${loadaddr} - ${fdt_addr}\0"	\
 		"bootargs_mmc=run bootargs_base; setenv bootargs ${bootargs_tmp} ${mtdparts} root=/dev/mmcblk${mmcdev}p2 rootwait rw\0" \
 		"bootcmd_mmc=setenv mmcdev 0; run bootargs_mmc; run loadfdt; run loadzImage; bootz ${loadaddr} - ${fdt_addr}\0"	\
 		"bootargs_net=run bootargs_base; setenv bootargs ${bootargs_tmp} root=/dev/nfs ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \

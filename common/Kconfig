@@ -309,6 +309,15 @@ config NAND_BOOT
 	  booted via NAND flash. This is not a must, some SoCs need this,
 	  some not.
 
+config EMMC_BOOT
+	bool "Support for booting from eMMC"
+	default n	
+	help
+	  Enabling this will make a U-Boot binary that is capable of being
+	  booted via NAND flash. This is not a must, some SoCs need this,
+	  some not.
+	  
+	  
 config ONENAND_BOOT
 	bool "Support for booting from ONENAND"
 	default n
