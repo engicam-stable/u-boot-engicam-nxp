@@ -94,6 +94,7 @@ static iomux_v3_cfg_t const quadspi_pads[] = {
 };
 #endif
 
+
 static int board_qspi_init(void)
 {
 #ifndef CONFIG_DM_SPI
@@ -108,8 +109,20 @@ static int board_qspi_init(void)
 }
 #endif
 
-
 #ifdef CONFIG_FSL_USDHC
+
+static iomux_v3_cfg_t const usdhc2_pads[] = {
+	MX6_PAD_NAND_RE_B__USDHC2_CLK | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_WE_B__USDHC2_CMD | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA00__USDHC2_DATA0 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA01__USDHC2_DATA1 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA02__USDHC2_DATA2 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA03__USDHC2_DATA3 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA04__USDHC2_DATA4 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA05__USDHC2_DATA5 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA06__USDHC2_DATA6 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+	MX6_PAD_NAND_DATA07__USDHC2_DATA7 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
+};
 
 
 static iomux_v3_cfg_t const usdhc1_pads[] = {
@@ -128,13 +141,11 @@ static iomux_v3_cfg_t const usdhc1_pads[] = {
 
 static struct fsl_esdhc_cfg usdhc_cfg[2] = {
 	{USDHC1_BASE_ADDR, 0, 1}, /* 1 bit for EDIMM adapter only */
-	{USDHC2_BASE_ADDR, 0, 4},
+	{USDHC2_BASE_ADDR, 0, 8},
 };
 
 #define USDHC1_CD_GPIO	IMX_GPIO_NR(1, 19)
 #define USDHC1_PWR_GPIO	IMX_GPIO_NR(1, 9)
-#define USDHC2_CD_GPIO	IMX_GPIO_NR(4, 5)
-#define USDHC2_PWR_GPIO	IMX_GPIO_NR(4, 10)
 
 int board_mmc_getcd(struct mmc *mmc)
 {
@@ -145,18 +156,16 @@ int board_mmc_getcd(struct mmc *mmc)
 	case USDHC1_BASE_ADDR:
 		ret = !gpio_get_value(USDHC1_CD_GPIO);
 		break;
-	case USDHC2_BASE_ADDR:
-		ret = 1;
+	case USDHC2_BASE_ADDR:		
+		ret=1;
 		break;
 	}
-
 	return ret;
 }
 
 int board_mmc_init(bd_t *bis)
 {
 	int i, ret;
-
 	/*
 	 * According to the board_mmc_init() the following map is done:
 	 * (U-Boot device node)    (Physical Port)
@@ -170,9 +179,13 @@ int board_mmc_init(bd_t *bis)
 				usdhc1_pads, ARRAY_SIZE(usdhc1_pads));
 			gpio_direction_input(USDHC1_CD_GPIO);
 			usdhc_cfg[0].sdhc_clk = mxc_get_clock(MXC_ESDHC_CLK);
-
 			break;
 		case 1:
+		#ifndef CONFIG_NAND_MXS
+			imx_iomux_v3_setup_multiple_pads(
+				usdhc2_pads, ARRAY_SIZE(usdhc2_pads));
+			usdhc_cfg[1].sdhc_clk = mxc_get_clock(MXC_ESDHC2_CLK);			
+		#endif			
 			break;
 		default:
 			printf("Warning: you configured more USDHC controllers (%d) than supported by the board\n", i + 1);
