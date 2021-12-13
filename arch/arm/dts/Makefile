@@ -727,7 +727,8 @@ dtb-$(CONFIG_MX6ULL) += \
 	imx6ulz-14x14-evk-gpmi-weim.dtb \
 	imx6ull-isiot.dtb \
 	microgea-mx6ull.dtb \
-	gea-mx6ull.dtb
+	gea-mx6ull.dtb \
+	gea-mx6ull-emmc.dtb \
 
 dtb-$(CONFIG_ARCH_MX6) += \
 	imx6-apalis.dtb \
