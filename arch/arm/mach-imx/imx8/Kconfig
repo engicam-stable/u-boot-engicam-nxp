@@ -202,6 +202,11 @@ config TARGET_IMX8DXL_DDR3_EVK
 	select ARCH_MISC_INIT
 	select SPL_CRYPTO_SUPPORT if SPL
 
+config TARGET_IMX8XD_SMARCORE
+	bool "Support smarcore mx8x dual"
+	select BOARD_LATE_INIT
+	select IMX8QXP
+
 endchoice
 
 source "board/freescale/imx8qm_mek/Kconfig"
@@ -215,6 +220,7 @@ source "board/toradex/apalis-imx8/Kconfig"
 source "board/toradex/colibri-imx8x/Kconfig"
 source "board/toradex/apalis-imx8x/Kconfig"
 source "board/siemens/capricorn/Kconfig"
+source "board/engicam/imx8x_smarcore/Kconfig"
 
 config IMX_SNVS_SEC_SC
 	bool "Support SNVS configuration"
