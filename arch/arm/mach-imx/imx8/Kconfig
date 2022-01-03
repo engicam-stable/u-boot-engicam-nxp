@@ -207,6 +207,12 @@ config TARGET_IMX8XD_SMARCORE
 	select BOARD_LATE_INIT
 	select IMX8QXP
 
+config TARGET_IMX8XQ_SMARCORE
+	bool "Support smarcore mx8x quad"
+	select BOARD_LATE_INIT
+	select IMX8QXP
+	
+	
 endchoice
 
 source "board/freescale/imx8qm_mek/Kconfig"
