@@ -89,6 +89,7 @@
 	"splashimage=0x50000000\0" \
 	"console=ttymxc1,115200\0" \
 	"fdt_addr=0x43000000\0"			\
+	"fdto_addr=0x431C0000\0"			\
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fit=no\0" \
 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
@@ -104,12 +105,24 @@
 		"source\0" \
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+	"loadfdto=fatload mmc ${mmcdev}:${mmcpart} ${fdto_addr} ${dtbo}\0" \
+	"applyfdto=echo Applying overlays ...; " \
+		"for i in ${fdto_file}; do " \
+			"setenv dtbo ${i}; " \
+			"run loadfdto;  " \
+			"fdt addr ${fdt_addr}; " \
+			"fdt resize 8192; " \
+			"fdt apply ${fdto_addr}; " \
+		"done;\0"\
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
 		"if test ${boot_fit} = yes || test ${boot_fit} = try; then " \
 			"bootm ${loadaddr}; " \
 		"else " \
 			"if run loadfdt; then " \
+				"if test -n ${fdto_file}; then " \
+					"run applyfdto; " \
+				"fi; " \
 				"booti ${loadaddr} - ${fdt_addr}; " \
 			"else " \
 				"echo WARN: Cannot load the DT; " \
