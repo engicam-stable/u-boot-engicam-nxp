@@ -213,8 +213,8 @@ int board_phy_config(struct phy_device *phydev)
 
 int checkboard(void)
 {
-#ifdef CONFIG_TARGET_IMX8DX_MEK
-	puts("Board: iMX8DX MEK\n");
+#ifdef CONFIG_TARGET_IMX8XD_ICORE
+	puts("Board: MX8XD i.CORE\n");
 #else
 	puts("Board: iMX8QXP MEK\n");
 #endif
@@ -387,9 +387,9 @@ int board_late_init(void)
 	build_info();
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	env_set("board_name", "MEK");
-#ifdef CONFIG_TARGET_IMX8DX_MEK
-	env_set("board_rev", "iMX8DX");
+	env_set("board_name", "i.CORE");
+#ifdef CONFIG_TARGET_IMX8XD_ICORE
+	env_set("board_rev", "MX8XD");
 #else
 	env_set("board_rev", "iMX8QXP");
 #endif
@@ -404,11 +404,11 @@ int board_late_init(void)
 	m4_booted = m4_parts_booted();
 
 	if (fdt_file && !strcmp(fdt_file, "undefined")) {
-#ifdef CONFIG_TARGET_IMX8DX_MEK
+#ifdef CONFIG_TARGET_IMX8XD_ICORE
 		if (m4_booted)
 			env_set("fdt_file", "imx8dx-mek-rpmsg.dtb");
 		else
-			env_set("fdt_file", "imx8dx-mek.dtb");
+			env_set("fdt_file", "imx8xd-icore-starterkit.dtb");
 #else
 		if (m4_booted)
 			env_set("fdt_file", "imx8qxp-mek-rpmsg.dtb");
