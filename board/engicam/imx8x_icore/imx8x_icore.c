@@ -147,7 +147,7 @@ static void enet_device_phy_reset(void)
 
 	/* The BB_PER_RST_B will reset the ENET1 PHY */
 	if (0 == CONFIG_FEC_ENET_DEV) {
-		ret = dm_gpio_lookup_name("gpio@1a_4", &desc);
+		ret = dm_gpio_lookup_name("GPIO3_4", &desc);
 		if (ret)
 			return;
 

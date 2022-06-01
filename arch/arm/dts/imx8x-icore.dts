@@ -61,6 +61,8 @@
 			fsl,pins = <
 				SC_P_MCLK_OUT0_ADMA_ACM_MCLK_OUT0	0x0600004c
 				SC_P_COMP_CTL_GPIO_1V8_3V3_GPIORHB_PAD	0x000514a0
+				SC_P_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04 0x06000020
+				SC_P_MIPI_CSI0_GPIO0_00_LSIO_GPIO3_IO08 0x06000020
 			>;
 		};
 
@@ -359,7 +361,7 @@
 	fsl,ar8031-phy-fixup;
 	fsl,magic-packet;
 	status = "okay";
-	phy-reset-gpios = <&pca9557_a 4 GPIO_ACTIVE_LOW>;
+	phy-reset-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
 	phy-reset-post-delay = <150>;
 
@@ -367,13 +369,13 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		ethphy0: ethernet-phy@0 {
+		ethphy0: ethernet-phy@7 {
 			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <0>;
+			reg = <7>;
 		};
-		ethphy1: ethernet-phy@1 {
+		ethphy1: ethernet-phy@3 {
 			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <1>;
+			reg = <3>;
 		};
 	};
 };
@@ -382,6 +384,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_fec2>;
 	phy-mode = "rgmii";
+	phy-reset-gpio = <&gpio3 8 GPIO_ACTIVE_HIGH>;
 	phy-handle = <&ethphy1>;
 	fsl,ar8031-phy-fixup;
 	fsl,magic-packet;
