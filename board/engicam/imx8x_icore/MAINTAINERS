@@ -1,0 +1,6 @@
+i.CORE MX8X DUAL
+M:	Domenico Acri <domenico.acri@engicam.com>
+S:	Maintained
+F:	board/engicam/imx8x_icore
+F:	include/configs/imx8x_icore.h
+F:	configs/imx8xd_icore_defconfig
