@@ -296,7 +296,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c0_mipi_lvds0>;
 	clock-frequency = <100000>;
-	status = "okay";
+	status = "disabled";
 
 	lvds-to-hdmi-bridge@4c {
 		compatible = "ite,it6263";
@@ -406,7 +406,7 @@
 };
 
 &dpu1 {
-	status = "okay";
+	status = "disabled";
 };
 
 &ldb1_phy {
@@ -419,7 +419,7 @@
 	lvds-channel@0 {
 		fsl,data-mapping = "jeida";
 		fsl,data-width = <24>;
-		status = "okay";
+		status = "disabled";
 
 		display-timings {
 			native-mode = <&timing0>;
