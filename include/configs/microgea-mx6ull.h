@@ -77,7 +77,7 @@
 	"console=ttymxc0\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
-	"fdt_file=undefined\0" \
+	"fdt_file=imx6ull-microgea-microdev.dtb\0" \
 	"fdt_addr=0x83000000\0" \
 	"tee_addr=0x84000000\0" \
 	"tee_file=undefined\0" \
@@ -180,7 +180,7 @@
 
 /* environment organization */
 #define CONFIG_SYS_MMC_ENV_DEV		0	/* USDHC2 */
-#define CONFIG_MMCROOT			"/dev/mmcblk0p1"  /* USDHC2 */
+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"  /* USDHC2 */
 
 #define CONFIG_IOMUX_LPSR
 
