@@ -216,7 +216,7 @@ int checkboard(void)
 #ifdef CONFIG_TARGET_IMX8XD_ICORE
 	puts("Board: MX8XD i.CORE\n");
 #else
-	puts("Board: iMX8QXP MEK\n");
+	puts("Board: MX8XQ i.CORE\n");
 #endif
 
 	print_bootinfo();
@@ -391,7 +391,7 @@ int board_late_init(void)
 #ifdef CONFIG_TARGET_IMX8XD_ICORE
 	env_set("board_rev", "MX8XD");
 #else
-	env_set("board_rev", "iMX8QXP");
+	env_set("board_rev", "MX8XQ");
 #endif
 #endif
 
@@ -413,7 +413,7 @@ int board_late_init(void)
 		if (m4_booted)
 			env_set("fdt_file", "imx8qxp-mek-rpmsg.dtb");
 		else
-			env_set("fdt_file", "imx8qxp-mek.dtb");
+			env_set("fdt_file", "imx8xq-icore-starterkit.dtb");
 #endif
 	}
 

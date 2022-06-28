@@ -8,7 +8,7 @@
 #include "fsl-imx8qxp.dtsi"
 
 / {
-	model = "Engicam MX8XD i.CORE";
+	model = "Engicam MX8XD/Q i.CORE";
 	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
 
 	aliases {

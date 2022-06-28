@@ -246,8 +246,7 @@
 #define PHYS_SDRAM_2_SIZE		0x00000000	/* 0 GB */
 #else
 #define PHYS_SDRAM_1_SIZE		0x80000000	/* 2 GB */
-/* LPDDR4 board total DDR is 3GB */
-#define PHYS_SDRAM_2_SIZE		0x40000000	/* 1 GB */
+#define PHYS_SDRAM_2_SIZE		0x00000000	/* 0 GB */
 #endif
 
 /* Serial */
