@@ -190,6 +190,12 @@ config TARGET_IMX8MP_ICORE
 	select MISC
 	select SPL_CRYPTO_SUPPORT if SPL
 	
+config TARGET_IMX8MM_ICORE
+	bool "imx8mm iCore Engicam module"
+	select IMX8MM
+	select SUPPORT_SPL
+	select IMX8M_LPDDR4
+
 config TARGET_IMX8MM_AB2
 	bool "imx8mm LPDDR4 Audio board 2.0"
 	select IMX8MM
@@ -287,5 +293,6 @@ source "board/beacon/imx8mn/Kconfig"
 source "board/phytec/phycore_imx8mm/Kconfig"
 source "board/phytec/phycore_imx8mp/Kconfig"
 source "board/engicam/imx8mp_icore/Kconfig"
+source "board/engicam/imx8mm_icore/Kconfig"
 
 endif
