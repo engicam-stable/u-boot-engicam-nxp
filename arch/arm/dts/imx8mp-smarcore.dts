@@ -9,7 +9,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "Engicam i.MX8MPlus iCore";
+	model = "Engicam i.MX8MPlus Smarcore";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {
@@ -22,7 +22,19 @@
 		reg = <0x0 0x40000000 0 0xc0000000>,
 		      <0x1 0x00000000 0 0xc0000000>;
 	};
+  
+	leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_led>;
 
+		status {
+			label = "status";
+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+			default-state = "on"; /* LED GREEN */
+		};
+	};
+  
 	reg_usdhc2_vmmc: regulator-usdhc2 {
 		compatible = "regulator-fixed";
 		pinctrl-names = "default";
@@ -49,9 +61,9 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		ethphy0: ethernet-phy@7 {
+		ethphy0: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <7>;
+			reg = <1>;
 			eee-broken-1000t;
 		};
 	};
@@ -69,9 +81,9 @@
 	pmic: pca9450@25 {
 		reg = <0x25>;
 		compatible = "nxp,pca9450c";
-		/* PMIC PCA9450 PMIC_nINT GPIO3_IO1 */
+		/* PMIC PCA9450 PMIC_nINT GPIO1_IO3 */
 		pinctrl-0 = <&pinctrl_pmic>;
-		gpio_intr = <&gpio3 1 GPIO_ACTIVE_LOW>;
+		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
 
 		regulators {
 			#address-cells = <1>;
@@ -218,7 +230,7 @@
 
 	pinctrl_eqos: eqosgrp {
 		fsl,pins = <
-			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC	0x3
+			MX8MP_IOMUXC_GPIO1_IO06__ENET_QOS_MDC	0x3
 			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO	0x3
 			MX8MP_IOMUXC_ENET_RD0__ENET_QOS_RGMII_RD0	0x91
 			MX8MP_IOMUXC_ENET_RD1__ENET_QOS_RGMII_RD1	0x91
@@ -236,6 +248,12 @@
 		>;
 	};
 
+  pinctrl_gpio_led: gpioledgrp {
+		fsl,pins = <
+			MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16	0x19
+		>;
+	};
+  
 	pinctrl_i2c1: i2c1grp {
 		fsl,pins = <
 			MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL		0x400001c3
@@ -299,7 +317,7 @@
 			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d0
 			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d0
 			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d0
-			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x190
+			MX8MP_IOMUXC_ENET_MDC__USDHC3_STROBE	0x190
 		>;
 	};
 
@@ -315,7 +333,7 @@
 			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d4
 			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d4
 			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d4
-			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x194
+			MX8MP_IOMUXC_ENET_MDC__USDHC3_STROBE	0x194
 		>;
 	};
 
@@ -331,7 +349,7 @@
 			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d6
 			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d6
 			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d6
-			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x196
+			MX8MP_IOMUXC_ENET_MDC__USDHC3_STROBE	0x196
 		>;
 	};
 

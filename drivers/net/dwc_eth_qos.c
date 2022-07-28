@@ -1213,7 +1213,7 @@ static int eqos_start(struct udevice *dev)
 
 	eqos->tx_desc_idx = 0;
 	eqos->rx_desc_idx = 0;
-
+pr_err("MIRKO");dfdfdf
 	ret = eqos->config->ops->eqos_start_clks(dev);
 	if (ret < 0) {
 		pr_err("eqos_start_clks() failed: %d", ret);
@@ -1226,7 +1226,7 @@ static int eqos_start(struct udevice *dev)
 		goto err_stop_clks;
 	}
 
-	udelay(10);
+	udelay(40);
 
 	eqos->reg_access_ok = true;
 
