@@ -43,6 +43,8 @@ static iomux_v3_cfg_t const wdog_pads[] = {
 	MX8MP_PAD_GPIO1_IO02__WDOG1_WDOG_B  | MUX_PAD_CTRL(WDOG_PAD_CTRL),
 };
 
+void reset_eqos(void);
+
 int board_early_init_f(void)
 {
 	struct wdog_regs *wdog = (struct wdog_regs *)WDOG1_BASE_ADDR;
@@ -345,6 +347,10 @@ int board_usb_init(int index, enum usb_init_type init)
 		ret = tcpc_setup_dfp_mode(&port1);
 #endif
 		return ret;
+	} else if (index == 1 && init == USB_INIT_HOST) {
+		/* Enable GPIO1_IO14 for 5V VBUS */
+		gpio_request(USB2_PWR_EN, "usb2_pwr");
+		gpio_direction_output(USB2_PWR_EN, 1);
 	}
 
 	return 0;
@@ -359,6 +365,9 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 #ifdef CONFIG_USB_TCPC
 		ret = tcpc_disable_src_vbus(&port1);
 #endif
+	} else if (index == 1 && init == USB_INIT_HOST) {
+		/* Disable GPIO1_IO14 for 5V VBUS */
+		gpio_direction_output(USB2_PWR_EN, 0);
 	}
 
 	imx8m_usb_power(index, false);
@@ -405,12 +414,26 @@ static int setup_eqos(void)
 	struct iomuxc_gpr_base_regs *gpr =
 		(struct iomuxc_gpr_base_regs *)IOMUXC_GPR_BASE_ADDR;
 
-	/* set INTF as RGMII, enable RGMII TXC clock */
-	clrsetbits_le32(&gpr->gpr[1],
-			IOMUXC_GPR_GPR1_GPR_ENET_QOS_INTF_SEL_MASK, BIT(16));
-	setbits_le32(&gpr->gpr[1], BIT(19) | BIT(21));
+	clrbits_le32(&gpr->gpr[1], BIT(20));
 
-	return set_clk_eqos(ENET_125MHZ);
+	/* Enable clk generate module for ENET QoS */
+	setbits_le32(&gpr->gpr[1], BIT(19) );
+	
+	#ifdef CONFIG_TARGET_IMX8MP_ICORE_FASTETH
+			/* set INTF as RMII  */
+		clrsetbits_le32(&gpr->gpr[1],
+				IOMUXC_GPR_GPR1_GPR_ENET_QOS_INTF_SEL_MASK , BIT(18));
+
+		return set_clk_eqos(ENET_50MHZ);
+	#else
+		/* set INTF as RGMII, enable RGMII TXC clock */
+		clrsetbits_le32(&gpr->gpr[1],
+				IOMUXC_GPR_GPR1_GPR_ENET_QOS_INTF_SEL_MASK, BIT(16));
+		setbits_le32(&gpr->gpr[1], BIT(19) | BIT(21));
+
+
+		return set_clk_eqos(ENET_125MHZ);
+	#endif
 }
 
 #if CONFIG_IS_ENABLED(NET)
@@ -422,8 +445,55 @@ int board_phy_config(struct phy_device *phydev)
 }
 #endif
 
+#define FSL_SIP_GPC			0xC2000000
+#define FSL_SIP_CONFIG_GPC_PM_DOMAIN	0x3
 #define DISPMIX				13
 #define MIPI				15
+
+static iomux_v3_cfg_t const eqos_pads[] = {
+	MX8MP_PAD_ENET_RD3__GPIO1_IO29 | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RX_CTL__GPIO1_IO24 | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RD0__GPIO1_IO26 | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RD1__GPIO1_IO27 | MUX_PAD_CTRL(0x1D1),
+};
+
+static iomux_v3_cfg_t const eqos_pads_orig[] = {
+	MX8MP_PAD_ENET_RD3__ENET_QOS_RGMII_RD3 | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RX_CTL__ENET_QOS_RGMII_RX_CTL | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RD0__ENET_QOS_RGMII_RD0 | MUX_PAD_CTRL(0x1D1),
+	MX8MP_PAD_ENET_RD1__ENET_QOS_RGMII_RD1 | MUX_PAD_CTRL(0x1D1),
+};
+
+#ifdef CONFIG_TARGET_IMX8MP_ICORE_FASTETH
+	#define RESET_EQOS_PHY IMX_GPIO_NR(1, 29)
+#else
+	#define RESET_EQOS_PHY IMX_GPIO_NR(3, 7)
+#endif
+void reset_eqos(void)
+{
+	imx_iomux_v3_setup_multiple_pads(eqos_pads, ARRAY_SIZE(eqos_pads));
+
+	gpio_request(IMX_GPIO_NR(1,24), "eqos_rx");
+	gpio_request(IMX_GPIO_NR(1,26), "eqos_rd0");
+	gpio_request(IMX_GPIO_NR(1,27), "eqos_rd1");
+
+	gpio_direction_output(IMX_GPIO_NR(1,24), 1);
+	gpio_direction_output(IMX_GPIO_NR(1,26), 1);
+	gpio_direction_output(IMX_GPIO_NR(1,27), 1);
+
+	udelay(1000);
+
+	gpio_request(RESET_EQOS_PHY, "eqos");
+	gpio_direction_output(RESET_EQOS_PHY, 0);
+
+	udelay(1000);
+
+	gpio_direction_output(RESET_EQOS_PHY, 1);
+
+	udelay(10);
+
+	imx_iomux_v3_setup_multiple_pads(eqos_pads_orig, ARRAY_SIZE(eqos_pads_orig));
+}
 
 int board_init(void)
 {
@@ -459,6 +529,7 @@ int board_init(void)
 	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_GPC_PM_DOMAIN,
 		      MIPI, true, 0, 0, 0, 0, &res);
 
+	reset_eqos();
 	return 0;
 }
 

@@ -120,6 +120,14 @@ static const char *imx8mp_i2c6_sels[] = {"clock-osc-24m", "sys_pll1_160m", "sys_
 					 "sys_pll3_out", "audio_pll1_out", "video_pll1_out",
 					 "audio_pll2_out", "sys_pll1_133m", };
 
+static const char *imx8mp_enet_qos_sels[] = {"clock-osc-24m", "sys_pll2_125m", "sys_pll2_50m",
+					     "sys_pll2_100m", "sys_pll1_160m", "audio_pll1_out",
+					     "video_pll1_out", "clk_ext4", };
+
+static const char *imx8mp_enet_qos_timer_sels[] = {"clock-osc-24m", "sys_pll2_100m", "audio_pll1_out",
+						   "clk_ext1", "clk_ext2", "clk_ext3",
+						   "clk_ext4", "video_pll1_out", };
+
 static const char *imx8mp_usdhc1_sels[] = {"clock-osc-24m", "sys_pll1_400m", "sys_pll1_800m",
 					   "sys_pll2_500m", "sys_pll3_out", "sys_pll1_266m",
 					   "audio_pll2_out", "sys_pll1_100m", };

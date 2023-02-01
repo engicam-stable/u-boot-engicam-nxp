@@ -291,6 +291,7 @@ struct eqos_ops {
 	int (*eqos_calibrate_pads)(struct udevice *dev);
 	int (*eqos_disable_calibration)(struct udevice *dev);
 	int (*eqos_set_tx_clk_speed)(struct udevice *dev);
+	int (*eqos_get_enetaddr)(struct udevice *dev);
 	ulong (*eqos_get_tick_clk_rate)(struct udevice *dev);
 };
 
@@ -899,12 +900,7 @@ __weak int imx_eqos_txclk_set_rate(unsigned long rate)
 
 static ulong eqos_get_tick_clk_rate_imx(struct udevice *dev)
 {
-#if CONFIG_IS_ENABLED(CLK) && IS_ENABLED(CONFIG_IMX8)
-	struct eqos_priv *eqos = dev_get_priv(dev);
-	return clk_get_rate(&eqos->clk_slave_bus);
-#else
 	return imx_get_eqos_csr_clk();
-#endif
 }
 
 static int eqos_calibrate_pads_stm32(struct udevice *dev)
@@ -1032,7 +1028,7 @@ static int eqos_set_tx_clk_speed_imx(struct udevice *dev)
 {
 	struct eqos_priv *eqos = dev_get_priv(dev);
 	ulong rate;
-	int ret = 0;
+	int ret;
 
 	debug("%s(dev=%p):\n", __func__, dev);
 
@@ -1051,12 +1047,7 @@ static int eqos_set_tx_clk_speed_imx(struct udevice *dev)
 		return -EINVAL;
 	}
 
-#if CONFIG_IS_ENABLED(CLK) && IS_ENABLED(CONFIG_IMX8)
-	if (!is_imx8dxl())
-		ret = clk_set_rate(&eqos->clk_tx, rate);
-#else
 	ret = imx_eqos_txclk_set_rate(rate);
-#endif
 	if (ret < 0) {
 		pr_err("imx (tx_clk, %lu) failed: %d", rate, ret);
 		return ret;
@@ -1229,6 +1220,12 @@ static int eqos_start(struct udevice *dev)
 	udelay(10);
 
 	eqos->reg_access_ok = true;
+
+	/*
+	 * Assert the SWR first, the actually reset the MAC and to latch in
+	 * e.g. i.MX8M Plus GPR[1] content, which selects interface mode.
+	 */
+	setbits_le32(&eqos->dma_regs->mode, EQOS_DMA_MODE_SWR);
 
 	ret = wait_for_bit_le32(&eqos->dma_regs->mode,
 				EQOS_DMA_MODE_SWR, false,
@@ -1822,7 +1819,6 @@ static int eqos_probe_resources_tegra186(struct udevice *dev)
 	if (ret) {
 		pr_err("clk_get_by_name(ptp_ref) failed: %d", ret);
 		goto err_free_clk_rx;
-		return ret;
 	}
 
 	ret = clk_get_by_name(dev, "tx", &eqos->clk_tx);
@@ -1957,7 +1953,6 @@ static int eqos_probe_resources_imx(struct udevice *dev)
 {
 	struct eqos_priv *eqos = dev_get_priv(dev);
 	phy_interface_t interface;
-	int ret = 0;
 
 	debug("%s(dev=%p):\n", __func__, dev);
 
@@ -1968,78 +1963,8 @@ static int eqos_probe_resources_imx(struct udevice *dev)
 		return -EINVAL;
 	}
 
-	ret = gpio_request_by_name(dev, "phy-reset-gpios", 0,
-				   &eqos->phy_reset_gpio,
-				   GPIOD_IS_OUT | GPIOD_IS_OUT_ACTIVE);
-	if (ret) {
-		pr_debug("gpio_request_by_name(phy reset) failed: %d", ret);
-	}
-
-	if (dm_gpio_is_valid(&eqos->phy_reset_gpio)) {
-		eqos->reset_delay = dev_read_u32_default(dev, "phy-reset-duration", 1);
-		if (eqos->reset_delay > 1000) {
-			pr_err("phy reset duration should be <= 1000ms\n");
-			/* property value wrong, use default value */
-			eqos->reset_delay = 1;
-		}
-
-		mdelay(eqos->reset_delay);
-
-		eqos->reset_post_delay = dev_read_u32_default(dev,
-							      "phy-reset-post-delay",
-							      0);
-		if (eqos->reset_post_delay > 1000) {
-			pr_err("phy reset post delay should be <= 1000ms\n");
-			/* property value wrong, use default value */
-			eqos->reset_post_delay = 0;
-		}
-
-		ret = dm_gpio_set_value(&eqos->phy_reset_gpio, 0);
-		if (ret < 0) {
-			pr_err("dm_gpio_set_value(phy_reset, deassert) failed: %d", ret);
-			goto err_free_gpio_phy_reset;
-		}
-
-		if (eqos->reset_post_delay)
-			mdelay(eqos->reset_post_delay);
-	}
-
-#if CONFIG_IS_ENABLED(CLK) && IS_ENABLED(CONFIG_IMX8)
-	ret = clk_get_by_name(dev, "aclk", &eqos->clk_master_bus);
-	if (ret) {
-		pr_err("clk_get_by_name(csr) failed: %d", ret);
-		goto err_free_gpio_phy_reset;
-	}
-
-	ret = clk_get_by_name(dev, "csr", &eqos->clk_slave_bus);
-	if (ret) {
-		pr_err("clk_get_by_name(aclk) failed: %d", ret);
-		goto err_free_clk_master_bus;
-	}
-
-	ret = clk_get_by_name(dev, "tx_clk", &eqos->clk_tx);
-	if (ret) {
-		pr_err("clk_get_by_name(tx) failed: %d", ret);
-		goto err_free_clk_slave_bus;
-	}
-#endif
-
 	debug("%s: OK\n", __func__);
 	return 0;
-
-#if CONFIG_IS_ENABLED(CLK) && IS_ENABLED(CONFIG_IMX8)
-err_free_clk_slave_bus:
-	clk_free(&eqos->clk_slave_bus);
-err_free_clk_master_bus:
-	clk_free(&eqos->clk_master_bus);
-#endif
-err_free_gpio_phy_reset:
-	if (dm_gpio_is_valid(&eqos->phy_reset_gpio)) {
-		dm_gpio_free(dev, &eqos->phy_reset_gpio);
-	}
-
-	debug("%s: returns %d\n", __func__, ret);
-	return ret;
 }
 
 static phy_interface_t eqos_get_interface_imx(struct udevice *dev)
@@ -2054,6 +1979,15 @@ static phy_interface_t eqos_get_interface_imx(struct udevice *dev)
 		interface = phy_get_interface_by_name(phy_mode);
 
 	return interface;
+}
+
+static int eqos_get_enetaddr_imx(struct udevice *dev)
+{
+	struct eth_pdata *pdata = dev_get_plat(dev);
+
+	imx_get_mac_from_fuse(dev_seq(dev), pdata->enetaddr);
+
+	return 0;
 }
 
 static int eqos_remove_resources_tegra186(struct udevice *dev)
@@ -2089,9 +2023,6 @@ static int eqos_remove_resources_stm32(struct udevice *dev)
 	if (clk_valid(&eqos->clk_ck))
 		clk_free(&eqos->clk_ck);
 #endif
-
-	if (dm_gpio_is_valid(&eqos->phy_reset_gpio))
-		dm_gpio_free(dev, &eqos->phy_reset_gpio);
 
 	debug("%s: OK\n", __func__);
 	return 0;
@@ -2283,6 +2214,7 @@ static struct eqos_ops eqos_imx_ops = {
 	.eqos_calibrate_pads = eqos_calibrate_pads_imx,
 	.eqos_disable_calibration = eqos_disable_calibration_imx,
 	.eqos_set_tx_clk_speed = eqos_set_tx_clk_speed_imx,
+	.eqos_get_enetaddr = eqos_get_enetaddr_imx,
 	.eqos_get_tick_clk_rate = eqos_get_tick_clk_rate_imx
 };
 
