@@ -188,7 +188,11 @@
 
 #ifdef CONFIG_IMX8MP_1G_LPDDR4
 	/* Totally 1GB DDR */	
-	#define PHYS_SDRAM_SIZE			0x40000000	/* 1 GB */	
+	#define PHYS_SDRAM_SIZE			0x40000000	/* 1 GB */
+#elif defined(CONFIG_IMX8MP_4G_LPDDR4)
+	#define PHYS_SDRAM_SIZE		0xC0000000	/* 3 GB */
+	#define PHYS_SDRAM_2		0x100000000
+	#define PHYS_SDRAM_2_SIZE	0x40000000	/* 1 GB */
 #else
 	/* Totally 2GB DDR */
 	#define PHYS_SDRAM_SIZE			0x80000000	/* 2 GB */
