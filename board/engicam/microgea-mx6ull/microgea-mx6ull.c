@@ -267,9 +267,20 @@ void board_late_mmc_env_init(void)
 	run_command(cmd, 0);
 }
 
+/*
+ *	Register CCM_ANALOG_MISC0n --> 0x20C8150
+ *	configure reftop_vbgadj = 110 for reduce the value around 2.34%
+ */
+static void setutp_reftop_vbgadj(void)
+{
+	struct mxc_ccm_reg *imx_ccm = (struct mxc_ccm_reg *)CCM_BASE_ADDR;
+	writel(0x240080E8, &imx_ccm->pmu_misc0);
+}
 
 int board_late_init(void)
 {
+	setutp_reftop_vbgadj();
+
 #ifdef CONFIG_CMD_BMODE
 	add_board_boot_modes(board_boot_modes);
 #endif
