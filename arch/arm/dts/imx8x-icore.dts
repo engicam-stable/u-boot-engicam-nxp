@@ -42,7 +42,6 @@
 			fsl,pins = <
 				SC_P_MCLK_OUT0_ADMA_ACM_MCLK_OUT0	0x0600004c
 				SC_P_COMP_CTL_GPIO_1V8_3V3_GPIORHB_PAD	0x000514a0
-				SC_P_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04 0x06000020 /* TDB MM RGMII reset */
 			>;
 		};
 
@@ -64,7 +63,32 @@
 				SC_P_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1	0x06000020
 				SC_P_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2	0x06000020
 				SC_P_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3	0x06000020
-				SC_P_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04 0x06000020 /* TDB MM RGMII reset */
+				SC_P_MIPI_CSI0_MCLK_OUT_LSIO_GPIO3_IO04 0x06000020
+			>;
+		};
+
+		pinctrl_fec2: fec2grp {
+			fsl,pins = <
+				SC_P_ESAI0_SCKR_CONN_ENET1_RGMII_TX_CTL		0x00000060
+				SC_P_ESAI0_FSR_CONN_ENET1_RGMII_TXC		0x00000060
+				SC_P_ESAI0_TX4_RX1_CONN_ENET1_RGMII_TXD0	0x00000060
+				SC_P_ESAI0_TX5_RX0_CONN_ENET1_RGMII_TXD1	0x00000060
+				SC_P_ESAI0_FST_CONN_ENET1_RGMII_TXD2		0x00000060
+				SC_P_ESAI0_SCKT_CONN_ENET1_RGMII_TXD3		0x00000060
+				SC_P_ESAI0_TX0_CONN_ENET1_RGMII_RXC		0x00000060
+				SC_P_SPDIF0_TX_CONN_ENET1_RGMII_RX_CTL		0x00000060
+				SC_P_SPDIF0_RX_CONN_ENET1_RGMII_RXD0		0x00000060
+				SC_P_ESAI0_TX3_RX2_CONN_ENET1_RGMII_RXD1	0x00000060
+				SC_P_ESAI0_TX2_RX3_CONN_ENET1_RGMII_RXD2	0x00000060
+				SC_P_ESAI0_TX1_CONN_ENET1_RGMII_RXD3		0x00000060
+				SC_P_MIPI_CSI0_GPIO0_00_LSIO_GPIO3_IO08 0x06000020
+			>;
+		};
+
+		pinctrl_lpi2c1: lpi2c1grp {
+			fsl,pins = <
+				SC_P_USB_SS3_TC1_ADMA_I2C1_SCL	0x06000021
+				SC_P_USB_SS3_TC3_ADMA_I2C1_SDA	0x06000021
 			>;
 		};
 
@@ -214,7 +238,24 @@
 			max-speed = <100>;
 			reg = <7>;
 		};
+
+		ethphy1: ethernet-phy@3 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <3>;
+		};
 	};
+};
+
+&fec2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_fec2>;
+	phy-mode = "rgmii";
+	phy-handle = <&ethphy1>;
+	fsl,magic-packet;
+	status = "okay";
+	phy-reset-gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
+	phy-reset-duration = <10>;
+	phy-reset-post-delay = <150>;
 };
 
 &dpu1 {
