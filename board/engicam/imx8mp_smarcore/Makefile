@@ -9,6 +9,11 @@ obj-y += ../../freescale/common/
 
 ifdef CONFIG_SPL_BUILD
 obj-y += spl.o
-obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_timing.o
+ifdef CONFIG_IMX8MP_4GB_LPDDR4
+	obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_4gb_timing.o lpddr4_4gb_timing_single_ch_die.o
+else
+	obj-$(CONFIG_IMX8M_LPDDR4) += lpddr4_timing.o
+endif
+
 endif
 

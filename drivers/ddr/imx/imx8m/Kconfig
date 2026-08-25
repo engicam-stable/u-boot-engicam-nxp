@@ -10,6 +10,9 @@ config IMX8M_LPDDR4
 	help
 	  Select the i.MX8M LPDDR4 driver support on i.MX8M SOC.
 
+config IMX8MP_4GB_LPDDR4
+        bool "imx8m 4GB lpddr4"
+
 config IMX8M_2G_LPDDR4
 	bool "imx8m 2GB LPDDR4"
 
