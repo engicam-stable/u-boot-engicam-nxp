@@ -14,6 +14,7 @@
 #include <spl.h>
 #include <asm/global_data.h>
 #include <asm/io.h>
+#include <asm/system.h>
 #include <errno.h>
 #include <asm/io.h>
 #include <asm/mach-imx/iomux-v3.h>
@@ -65,13 +66,9 @@ int spl_board_boot_device(enum boot_device boot_dev_spl)
 void spl_dram_init(void)
 {
 #ifdef CONFIG_IMX8MP_4G_LPDDR4
-	/*
-	 * Two Micron 4GB variants differ only in MR8.
-	 * Init with the primary timing, then verify via MR8 and
-	 * re-init with the alternate timing if needed.
-	 */
+
 	extern struct dram_timing_info dram_timing_4gb_single_ch_die;
-	/* TODO: replace with the actual MR8 value of the new RAM variant */
+
 #define MR8_4GB_SINGLE_CH_DIE  0x18
 #define MR8_4GB_DUAL_CH_DIE  0x10
 	unsigned int mr8;
