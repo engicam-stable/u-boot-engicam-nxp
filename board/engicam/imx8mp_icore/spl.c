@@ -64,7 +64,7 @@ int spl_board_boot_device(enum boot_device boot_dev_spl)
 
 void spl_dram_init(void)
 {
-#ifdef CONFIG_IMX8MP_4G_LPDDR4
+#ifdef CONFIG_IMX8MP_4GB_LPDDR4
 	/*
 	 * Two Micron 4GB variants differ only in MR8.
 	 * Init with the primary timing, then verify via MR8 and
